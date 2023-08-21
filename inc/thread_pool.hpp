@@ -15,9 +15,6 @@ namespace concurrency {
 
 class ThreadPoolExecuter {
 public:
-    // default queue size is 128
-    // default number of threads is number of cores in computer - 1 (or 3 if can't infer cores)
-    //TODO: do defaulted queue size
     explicit ThreadPoolExecuter(size_t a_queue_size = 1024, size_t a_num_of_threads = std::thread::hardware_concurrency());
 
     ~ThreadPoolExecuter();

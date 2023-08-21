@@ -73,7 +73,7 @@ void ThreadPoolExecuter::FinisherTask::operator()()
     throw PoisonApple{};
 }
 
-ThreadPoolExecuter::ThreadPoolExecuter(size_t a_num_of_threads,size_t a_queue_size)
+ThreadPoolExecuter::ThreadPoolExecuter(size_t a_queue_size, size_t a_num_of_threads)
 : m_queue{a_queue_size}
 , m_threads{}
 , m_cv{}
