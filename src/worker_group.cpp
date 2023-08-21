@@ -69,20 +69,27 @@ WorkerGroup::WorkerGroup(size_t const& a_initial_threads, thread::BlockingQueue<
 {
     m_workers.reserve(a_initial_threads);
     //TODO: do this with add
-    for (size_t i = 0; i < a_initial_threads; ++i) {
-        std::thread worker{Worker{m_queue,m_deathrow,m_shutdown}};
-        m_workers[worker.get_id()] = std::move(worker);
-    }
+    add_workers(a_initial_threads);
 }
 
 WorkerGroup::~WorkerGroup()
 {
+    std::unique_lock lock{m_mutex};
     for (size_t i = 0; i < m_workers.size(); ++i) {
         m_queue.enqueue(std::make_unique<Task>(FinisherTask{}));
     }
     for (auto& it : m_workers) {
         it.second.join();
     }
+}
+
+void WorkerGroup::add_workers(size_t const& a_number)
+{
+    std::unique_lock lock{m_mutex};
+    for (size_t i = 0; i < a_number; ++i) {
+        std::thread worker{Worker{m_queue,m_deathrow,m_shutdown}};
+        m_workers[worker.get_id()] = std::move(worker);
+    }    
 }
 
 
