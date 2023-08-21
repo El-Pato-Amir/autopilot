@@ -37,6 +37,8 @@ public:
 
     void add_workers(size_t const& a_number);
 
+    void remove_workers(size_t const& a_number);
+
 private:
     std::unordered_map<std::thread::id, std::thread> m_workers;
     thread::BlockingQueue<std::unique_ptr<Task>>& m_queue;
