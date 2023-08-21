@@ -73,48 +73,6 @@ void ThreadPoolExecuter::FinisherTask::operator()()
     throw PoisonApple{};
 }
 
-ThreadPoolExecuter::ThreadPoolExecuter()
-: m_queue{128}
-, m_threads{}
-//maybe unnecessary
-, m_cv{}
-, m_mutex{}
-, m_immediate_shutdown{false}
-, m_shutdown{false}
-, m_remove{false}
-{
-    //TODO: put this as default in the h file
-    unsigned int processor_count = std::thread::hardware_concurrency();
-    std::unique_lock lock{m_mutex};
-    if (processor_count != 0) {
-        m_threads.reserve(processor_count);
-        for (unsigned int i = 0; i < processor_count - 1; ++i) {
-            m_threads.emplace_back(std::thread(Worker{m_queue,m_immediate_shutdown,m_remove,m_middle_man}));
-        }
-    } else {
-        m_threads.reserve(3);
-        for (unsigned int i = 0; i < 3; ++i) {
-            m_threads.emplace_back(std::thread(Worker{m_queue,m_immediate_shutdown,m_remove,m_middle_man}));
-        }
-    }
-}
-
-ThreadPoolExecuter::ThreadPoolExecuter(size_t a_num_of_threads)
-: m_queue{128}
-, m_threads{}
-, m_cv{}
-, m_mutex{}
-, m_immediate_shutdown{false}
-, m_shutdown{false}
-, m_remove{false}
-{
-    std::unique_lock lock{m_mutex};
-    m_threads.reserve(a_num_of_threads);
-    for (size_t i = 0; i < a_num_of_threads; ++i) {
-        m_threads.emplace_back(std::thread(Worker{m_queue,m_immediate_shutdown,m_remove,m_middle_man}));
-    }
-}
-
 ThreadPoolExecuter::ThreadPoolExecuter(size_t a_num_of_threads,size_t a_queue_size)
 : m_queue{a_queue_size}
 , m_threads{}
