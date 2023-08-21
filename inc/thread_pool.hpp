@@ -2,7 +2,6 @@
 #define THREAD_POOL_HPP
 
 #include "blocking_queue.hpp"
-#include "middle_man.hpp"
 #include "task.hpp"
 
 #include <cstddef> // size_t
@@ -11,6 +10,7 @@
 #include <atomic> // atomic variables
 #include <mutex> // mutex
 
+//TODO: worker group
 namespace concurrency {
 
 class ThreadPoolExecuter {
@@ -59,7 +59,6 @@ private:
     std::vector<std::thread> m_threads;
     std::condition_variable m_cv;
     mutable std::mutex m_mutex;
-    MiddleMan m_middle_man;
     std::atomic_bool m_immediate_shutdown;
     std::atomic_bool m_shutdown;
     std::atomic_bool m_remove;
