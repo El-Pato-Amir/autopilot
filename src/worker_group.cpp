@@ -64,7 +64,6 @@ WorkerGroup::WorkerGroup(size_t const& a_initial_threads, thread::BlockingQueue<
 , m_queue{a_queue}
 , m_deathrow{}
 , m_cv{}
-, m_mutex{}
 , m_shutdown{false}
 {
     m_workers.reserve(a_initial_threads);
