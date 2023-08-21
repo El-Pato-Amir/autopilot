@@ -14,7 +14,7 @@ namespace concurrency {
 
 class Worker {
 public:
-    explicit Worker(thread::BlockingQueue<std::unique_ptr<Task>>& a_queue, std::vector<std::thread::id>& a_ids);
+    explicit Worker(thread::BlockingQueue<std::unique_ptr<Task>>& a_queue, std::vector<std::thread::id>& a_ids, std::atomic_bool& a_shutdown);
     ~Worker() = default;
 
     void operator()();
@@ -26,7 +26,7 @@ private:
     thread::BlockingQueue<std::unique_ptr<Task>>& m_queue;
     std::vector<std::thread::id>& m_deathrow;
     //TODO: maybe we don't need these atomics anymore
-    std::atomic_bool m_shutdown;
+    std::atomic_bool& m_shutdown;
     std::atomic_bool m_remove;    
 };
 

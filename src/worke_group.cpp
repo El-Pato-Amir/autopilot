@@ -20,10 +20,10 @@ public:
 
 };
 
-Worker::Worker(thread::BlockingQueue<std::unique_ptr<Task>>& a_queue, std::vector<std::thread::id>& a_ids)
+Worker::Worker(thread::BlockingQueue<std::unique_ptr<Task>>& a_queue, std::vector<std::thread::id>& a_ids, std::atomic_bool& a_shutdown)
 : m_queue{a_queue}
 , m_deathrow{a_ids}
-, m_shutdown{false}
+, m_shutdown{a_shutdown}
 , m_remove{false}
 {
 }
