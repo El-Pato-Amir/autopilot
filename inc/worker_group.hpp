@@ -25,21 +25,23 @@ private:
 private:
     thread::BlockingQueue<std::unique_ptr<Task>>& m_queue;
     std::vector<std::thread::id>& m_deathrow;
-    //TODO: maybe we don't need these atomics anymore
+    //TODO: maybe add a mutex variable
     std::atomic_bool& m_shutdown;
     std::atomic_bool m_remove;    
 };
 
 class WorkerGroup {
 public:
-    WorkerGroup(size_t const& a_initial_threads);
+    WorkerGroup(size_t const& a_initial_threads, thread::BlockingQueue<std::unique_ptr<Task>>& a_queue);
     ~WorkerGroup();
 
 private:
     std::unordered_map<std::thread::id, std::thread> m_workers;
+    thread::BlockingQueue<std::unique_ptr<Task>>& m_queue;
     std::vector<std::thread::id> m_deathrow;
     std::condition_variable m_cv;
-    mutable std::mutex m_mutex; 
+    mutable std::mutex m_mutex;
+    std::atomic_bool m_shutdown; 
 };
 
 } // namespace concurrency

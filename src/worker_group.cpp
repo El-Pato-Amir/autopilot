@@ -38,6 +38,7 @@ void Worker::operator()()
         }
 
         if (m_remove) {
+            //TODO: this is not good! needs to be atomic
             m_deathrow.push_back(std::this_thread::get_id());
             return;
         }
@@ -55,6 +56,23 @@ bool Worker::execute_task(std::unique_ptr<Task>& a_task)
         return true;
     }
     return true;    
+}
+
+
+WorkerGroup::WorkerGroup(size_t const& a_initial_threads, thread::BlockingQueue<std::unique_ptr<Task>>& a_queue)
+: m_workers{}
+, m_queue{a_queue}
+, m_deathrow{}
+, m_cv{}
+, m_mutex{}
+, m_shutdown{false}
+{
+    m_workers.reserve(a_initial_threads);
+    //TODO: do this with add
+    for (size_t i = 0; i < a_initial_threads; ++i) {
+        std::thread worker{Worker{m_queue,m_deathrow,m_shutdown}};
+        m_workers[worker.get_id()] = std::move(worker);
+    }
 }
 
 } // concurrency
