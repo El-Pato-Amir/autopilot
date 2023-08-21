@@ -14,7 +14,7 @@ namespace concurrency {
 
 class Worker {
 public:
-    explicit Worker(thread::BlockingQueue<std::unique_ptr<Task>>& a_queue);
+    explicit Worker(thread::BlockingQueue<std::unique_ptr<Task>>& a_queue, std::vector<std::thread::id>& a_ids);
     ~Worker() = default;
 
     void operator()();
@@ -24,9 +24,10 @@ private:
 
 private:
     thread::BlockingQueue<std::unique_ptr<Task>>& m_queue;
+    std::vector<std::thread::id>& m_deathrow;
     //TODO: maybe we don't need these atomics anymore
-    std::atomic_bool& m_shutdown;
-    std::atomic_bool& m_remove;
+    std::atomic_bool m_shutdown;
+    std::atomic_bool m_remove;    
 };
 
 class WorkerGroup {
@@ -38,7 +39,7 @@ private:
     std::unordered_map<std::thread::id, std::thread> m_workers;
     std::vector<std::thread::id> m_deathrow;
     std::condition_variable m_cv;
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex; 
 };
 
 } // namespace concurrency
