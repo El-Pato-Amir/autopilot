@@ -5,27 +5,6 @@
 
 namespace concurrency {
 
-MiddleMan::MiddleMan(std::condition_variable& a_cv, std::mutex& a_mutex)
-: m_ids{}
-, m_cv{a_cv}
-, m_mutex{a_mutex}
-, m_wanted{}
-{
-}
-
-bool MiddleMan::join_death_row(std::thread::id a_id)
-{
-    std::unique_lock lock{m_mutex};
-    if (m_wanted > 0) {
-        m_ids.push_back(a_id);
-        --m_wanted;
-        m_cv.notify_all();
-        return true;
-    }
-    m_cv.notify_all();
-    return false;
-}
-
 class ThreadPoolExecuter::Worker {
 public:
 
@@ -39,14 +18,12 @@ private:
 
 private:
     thread::BlockingQueue<std::unique_ptr<Task>>& m_queue;
-    MiddleMan& m_middle_man;
     std::atomic_bool& m_shutdown;
     std::atomic_bool& m_remove;
 };
 
 ThreadPoolExecuter::Worker::Worker(thread::BlockingQueue<std::unique_ptr<Task>>& a_queue,std::atomic_bool& a_shutdown,std::atomic_bool& a_remove, MiddleMan& a_middle_man)
 : m_queue{a_queue}
-, m_middle_man{a_middle_man}
 , m_shutdown{a_shutdown}
 , m_remove{a_remove}
 {
@@ -102,7 +79,6 @@ ThreadPoolExecuter::ThreadPoolExecuter()
 //maybe unnecessary
 , m_cv{}
 , m_mutex{}
-, m_middle_man{m_cv,m_mutex}
 , m_immediate_shutdown{false}
 , m_shutdown{false}
 , m_remove{false}
@@ -128,7 +104,6 @@ ThreadPoolExecuter::ThreadPoolExecuter(size_t a_num_of_threads)
 , m_threads{}
 , m_cv{}
 , m_mutex{}
-, m_middle_man{m_cv,m_mutex}
 , m_immediate_shutdown{false}
 , m_shutdown{false}
 , m_remove{false}
@@ -145,7 +120,6 @@ ThreadPoolExecuter::ThreadPoolExecuter(size_t a_num_of_threads,size_t a_queue_si
 , m_threads{}
 , m_cv{}
 , m_mutex{}
-, m_middle_man{m_cv,m_mutex}
 , m_immediate_shutdown{false}
 , m_shutdown{false}
 , m_remove{}
