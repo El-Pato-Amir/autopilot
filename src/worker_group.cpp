@@ -75,4 +75,15 @@ WorkerGroup::WorkerGroup(size_t const& a_initial_threads, thread::BlockingQueue<
     }
 }
 
+WorkerGroup::~WorkerGroup()
+{
+    for (size_t i = 0; i < m_workers.size(); ++i) {
+        m_queue.enqueue(std::make_unique<Task>(FinisherTask{}));
+    }
+    for (auto& it : m_workers) {
+        it.second.join();
+    }
+}
+
+
 } // concurrency
