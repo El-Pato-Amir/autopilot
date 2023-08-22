@@ -5,11 +5,12 @@
 
 namespace fgear {
 
+template<typename Key>
 class Observer {
 public:
     virtual ~Observer() = default;
 
-    virtual void notify(std::string const& a_message) = 0;
+    virtual void notify(Key const& a_message) = 0;
 
 protected:
     Observer() = default;
