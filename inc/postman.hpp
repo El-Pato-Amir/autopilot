@@ -15,16 +15,16 @@
 
 namespace fgear {
 
-template<typename K, typename V>
+template<typename V>
 class Postman {
 public:
-    Postman(concurrency::BlockingMap<K, V> const& a_map, std::shared_ptr<Observer<K>> const& a_observer);
+    Postman(std::shared_ptr<concurrency::BlockingMap<std::string, V>> const& a_map, std::shared_ptr<Observer> const& a_observer);
 
-    void update(K const& a_key, V const& a_value);    
+    void update(std::string const& a_key, V const& a_value);    
 
 private:
-    concurrency::BlockingMap<K, V> m_map;
-    std::shared_ptr<Observer<K>> m_observer;
+    std::shared_ptr<concurrency::BlockingMap<std::string, V>> m_map;
+    std::shared_ptr<Observer> m_observer;
 };
 
 } // namespace fgear
