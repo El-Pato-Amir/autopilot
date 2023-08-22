@@ -1,13 +1,15 @@
 #ifndef OBSERVER_HPP
 #define OBSERVER_HPP
 
+#include <string> // std::string
+
 namespace fgear {
 
 class Observer {
 public:
     virtual ~Observer() = default;
 
-    virtual void notify() = 0;
+    virtual void notify(std::string const& a_message) = 0;
 
 protected:
     Observer() = default;
