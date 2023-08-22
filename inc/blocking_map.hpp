@@ -15,7 +15,7 @@ public:
     ~BlockingMap() = default;
 
     BlockingMap(BlockingMap&&) = delete;
-    BlockingMap operator=(BlockingMap&&) = delete;
+    BlockingMap& operator=(BlockingMap&&) = delete;
 
     std::atomic<V>& at(K const& a_key);
     std::atomic<V> const& at(K const& a_key) const;
