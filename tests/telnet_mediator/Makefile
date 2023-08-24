@@ -16,7 +16,7 @@ all: $(TARGET)
 
 check: $(TARGET)
 #5401 is the port number! change accordingly in utest if changed here
-	gnome-terminal -- fgfs --telnet=foo,bar,200,foo,5401,bar --generic=socket,out,5,127.0.0.1,5400,udp,trial
+	gnome-terminal -- fgfs --telnet=foo,bar,200,foo,5401,bar --generic=socket,out,5,127.0.0.1,49002,udp,generic_small
 	sleep 60
 	@./$(TARGET) -v
 
